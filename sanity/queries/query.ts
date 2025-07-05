@@ -21,7 +21,7 @@ const PRODUCT_BY_SLUG_QUERY = defineQuery(
 );
 
 const MY_ORDERS_QUERY =
-  defineQuery(`*[_type == 'order' && clerkUserId == $userId] | order(orderData desc){
+  defineQuery(`*[_type == 'order' && clerkUserId == $userId] | order(orderDate desc){
 ...,products[]{
   ...,product->
 }
