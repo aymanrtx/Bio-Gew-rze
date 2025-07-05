@@ -136,21 +136,34 @@ const CartPage = () => {
   };
 
   const handleCheckout = async () => {
+    if (!user?.id) {
+      toast.error("User ID is missing. Please try logging out and logging back in.");
+      return;
+    }
+    
+    if (!user?.emailAddresses?.[0]?.emailAddress) {
+      toast.error("Email address is missing. Please check your account settings.");
+      return;
+    }
+    
     setLoading(true);
     try {
       const metadata: Metadata = {
         orderNumber: crypto.randomUUID(),
         customerName: user?.fullName ?? "Unknown",
-        customerEmail: user?.emailAddresses[0]?.emailAddress ?? "Unknown",
-        clerkUserId: user?.id,
+        customerEmail: user.emailAddresses[0].emailAddress,
+        clerkUserId: user.id,
         address: selectedAddress,
       };
+      
+      console.log('Creating checkout session with metadata:', metadata);
       const checkoutUrl = await createCheckoutSession(groupedItems, metadata);
       if (checkoutUrl) {
         window.location.href = checkoutUrl;
       }
     } catch (error) {
       console.error("Error creating checkout session:", error);
+      toast.error("Failed to create checkout session. Please try again.");
     } finally {
       setLoading(false);
     }

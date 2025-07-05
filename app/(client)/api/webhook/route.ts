@@ -75,6 +75,14 @@ async function createOrderInSanity(
   const { orderNumber, customerName, customerEmail, clerkUserId, address } =
     metadata as unknown as Metadata & { address: string };
   const parsedAddress = address ? JSON.parse(address) : null;
+  
+  // Debug logging to identify any clerkUserId issues
+  console.log('Webhook metadata:', { orderNumber, customerName, customerEmail, clerkUserId });
+  
+  if (!clerkUserId) {
+    console.error('clerkUserId is missing from webhook metadata');
+    throw new Error('clerkUserId is required but was not provided');
+  }
 
   const lineItemsWithProduct = await stripe.checkout.sessions.listLineItems(
     id,

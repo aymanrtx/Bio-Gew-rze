@@ -20,7 +20,9 @@ const OrdersPage = async () => {
     return redirect("/");
   }
 
+  console.log('Fetching orders for userId:', userId);
   const orders = await getMyOrders(userId);
+  console.log('Orders retrieved:', orders?.length || 0, 'orders found');
   
   
 
